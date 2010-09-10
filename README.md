@@ -2,7 +2,7 @@
 ##### author: Brandon R. Stoner <monokrome@monokro.me>
 
 This is a small project that I made because I wanted a flexible method
-for aliasing hard-coded URLs to different objects. It's provides a more
+for aliasing extra URLs to different objects. It's provides a more
 flexible method for making a URL direct django to display the page for
 any Model that has a get_absolute_url method.
 
