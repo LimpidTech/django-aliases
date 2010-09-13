@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from managers import URLManager
 from django.db import models
+import managers
 
 class URL(models.Model):
     """ A URL that exists in order to alias an object to a different location. """
@@ -16,7 +16,7 @@ class URL(models.Model):
     related_object = generic.GenericForeignKey()
 
     # Custom manager for getting related items easily
-    objects = URLManager()
+    objects = managers.URLManager()
 
     def get_related_url(self):
         if hasattr(self.related_object, 'get_absolute_url'):
