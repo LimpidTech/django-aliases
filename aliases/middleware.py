@@ -1,7 +1,9 @@
 from django.http import HttpResponseRedirect, Http404
 from django.conf import settings
 from django.core.urlresolvers import resolve
+from exceptions import IndexError
 from models import URL
+import operator
 
 class AliasFallbackMiddleware(object):
     def process_response(self, request, response):
@@ -9,17 +11,32 @@ class AliasFallbackMiddleware(object):
             return response
 
         try:
-            alias = URL.objects.get(location=request.path_info)
-
-            if alias.get_related_url():
-                match = resolve(alias.get_related_url())
+            if hasattr(settings, 'ALIASES_MAP_ARGS') and settings.ALIASES_MAP_ARGS is False:
+                alias = URL.objects.get(location=request.path_info)
             else:
-                match = None
+                # I'm not a fan of raw SQL queries, but this should work in any SQL server (I think). If you know how to do
+                # this in django's ORM, let me know. If this doesn't work and you don't need this functionality, you can
+                # always set settings.ALIASES_MAP_ARGS to False and avoid this.
 
-            if match:
-                return match.func(request, *match.args, **match.kwargs)
+                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" REGEXP CONCAT("^", location)' % request.path_info)
+
+                try:
+                    alias = alias[0]
+                except IndexError:
+                    alias = None
+
+            if alias is not None:
+                if alias.get_related_url():
+                    match = resolve(alias.get_related_url())
+                else:
+                    match = None
+
+                if match:
+                    return match.func(request, *match.args, **match.kwargs)
+                else:
+                    return HttpResponseRedirect(alias.get_related_url())
             else:
-                return HttpResponseRedirect(alias.get_related_url())
+                raise Http404('The specified URL mapping does not exist.')
 
         except URL.DoesNotExist:
             return response
