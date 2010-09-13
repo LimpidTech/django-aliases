@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.urlresolvers import resolve
 from exceptions import IndexError
 from models import URL
-import operator
+import operator, re
 
 class AliasFallbackMiddleware(object):
     def process_response(self, request, response):
@@ -30,6 +30,16 @@ class AliasFallbackMiddleware(object):
                     match = resolve(alias.get_related_url())
                 else:
                     match = None
+
+                # When we have extra data in the request, we pass it as args to the view
+                if len(alias.location) < len(request.path_info):
+                    additional_args = re.sub('\/$', '', request.path_info)
+                    additional_args = additional_args[len(alias.location):].split('/')
+
+                    # This is a tuple, which is immutable. Convert it to a list.
+                    match.args = list(match.args)
+
+                    match.args.extend(additional_args)
 
                 if match:
                     return match.func(request, *match.args, **match.kwargs)
