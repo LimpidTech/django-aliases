@@ -9,7 +9,7 @@ class URL(models.Model):
     class Meta(object):
         verbose_name = 'URL'
 
-    location = models.CharField(max_length=256)
+    location = models.CharField(max_length=256, unique=True)
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
