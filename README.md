@@ -1,5 +1,7 @@
 # django aliases
-##### author: Brandon R. Stoner <monokrome@monokro.me>
+##### Brandon R. Stoner <monokrome@monokro.me>
+
+# What is this?
 
 This is a small project that I made because I wanted a flexible method
 for aliasing extra URLs to different objects. It's provides a more
