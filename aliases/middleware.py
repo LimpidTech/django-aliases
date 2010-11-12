@@ -18,7 +18,7 @@ class AliasFallbackMiddleware(object):
                 # this in django's ORM, let me know. If this doesn't work and/or you don't need this functionality, you can
                 # always set settings.ALIASES_MAP_ARGS to False and avoid this.
 
-                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" REGEXP CONCAT("^", location)' % request.path_info)
+                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" REGEXP CONCAT("^", location)', [request.path_info])
 
                 try:
                     alias = alias[0]
