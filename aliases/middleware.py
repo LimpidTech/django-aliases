@@ -15,7 +15,7 @@ class AliasFallbackMiddleware(object):
                 alias = URL.objects.get(location=request.path_info)
             else:
                 # I'm not a fan of raw SQL queries, but this should work in any SQL server (I think). If you know how to do
-                # this in django's ORM, let me know. If this doesn't work and you don't need this functionality, you can
+                # this in django's ORM, let me know. If this doesn't work and/or you don't need this functionality, you can
                 # always set settings.ALIASES_MAP_ARGS to False and avoid this.
 
                 alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" REGEXP CONCAT("^", location)' % request.path_info)
