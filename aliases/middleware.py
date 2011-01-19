@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, Http404
 from django.conf import settings
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 from exceptions import IndexError
 from models import URL
 import operator, re
@@ -27,7 +27,10 @@ class AliasFallbackMiddleware(object):
 
             if alias is not None:
                 if alias.get_related_url():
-                    match = resolve(alias.get_related_url())
+                    try:
+                        match = resolve(alias.get_related_url())
+                    except Resolver404:
+                        match = None
                 else:
                     match = None
 
