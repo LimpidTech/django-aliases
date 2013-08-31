@@ -19,6 +19,8 @@ class AliasFallbackMiddleware(object):
                 # ORM, let me know. If this doesn't work and/or you don't need
                 # this functionality, you can always set
                 # settings.ALIASES_MAP_ARGS to False and avoid this.
+                #
+                # This will not work in SQLite.
 
                 alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" LIKE CONCAT(location, "%%") ORDER BY LENGTH(location) DESC LIMIT 1', [request.path_info])
 
