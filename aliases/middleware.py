@@ -19,14 +19,13 @@ class AliasFallbackMiddleware(object):
             if hasattr(settings, 'ALIASES_MAP_ARGS') and settings.ALIASES_MAP_ARGS is False:
                 alias = URL.objects.get(location=request.path_info)
             else:
-                # I'm not a fan of raw SQL queries, but this should work in any
-                # SQL server (I think). If you know how to do this in django's
-                # ORM, let me know. If this doesn't work and/or you don't need
-                # this functionality, you can always set
-                # settings.ALIASES_MAP_ARGS to False and avoid this.
-                #
-                # This will not work in SQLite.
-
+                # I'm not a fan of raw SQL queries, but that's the only option.
+                # If you know how to do this in django's ORM, let me know. If
+                # this doesn't work and/or you don't need this functionality,
+                # you can always set settings.ALIASES_MAP_ARGS to False and
+                # avoid this. Alternatively, if you feel like hacking a bit
+                # you can override the `aliases/location_match.sql` template
+                # to do whatever you prefer in your SQL backend.
                 alias = URL.objects.raw(raw_query, [request.path_info])
 
                 try:
