@@ -23,7 +23,6 @@ class AliasFallbackMiddleware(object):
                     request.path_info,
                 )
 
-
                 # I'm not a fan of raw SQL queries, but that's the only option.
                 # If you know how to do this in django's ORM, let me know. If
                 # this doesn't work and/or you don't need this functionality,
