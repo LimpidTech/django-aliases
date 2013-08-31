@@ -22,7 +22,7 @@ class AliasFallbackMiddleware(object):
                 #
                 # This will not work in SQLite.
 
-                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE location LIKE "%s%%" ORDER BY LENGTH(location) LIMIT 1', [request.path_info])
+                alias = URL.objects.raw('SELECT location FROM aliases_url WHERE location LIKE "%s%%" ORDER BY LENGTH(location) LIMIT 1', [request.path_info])
 
                 try:
                     alias = alias[0]
