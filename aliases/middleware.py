@@ -1,9 +1,14 @@
 from django.http import HttpResponseRedirect, Http404
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
+from django.template.loader import render_to_string
 from exceptions import IndexError
 from models import URL
 import operator, re
+
+
+raw_query = render_to_string('aliases/location_match.sql', {})
+
 
 class AliasFallbackMiddleware(object):
     def process_response(self, request, response):
@@ -22,7 +27,7 @@ class AliasFallbackMiddleware(object):
                 #
                 # This will not work in SQLite.
 
-                alias = URL.objects.raw('SELECT location FROM aliases_url WHERE location LIKE "%s%%" ORDER BY LENGTH(location) LIMIT 1', [request.path_info])
+                alias = URL.objects.raw(raw_query, [request.path_info])
 
                 try:
                     alias = alias[0]
