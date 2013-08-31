@@ -20,7 +20,7 @@ class AliasFallbackMiddleware(object):
                 # this functionality, you can always set
                 # settings.ALIASES_MAP_ARGS to False and avoid this.
 
-                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" LIKE CONCAT(location, "%%") ORDER BY LENGTH(location) LIMIT 1', [request.path_info])
+                alias = URL.objects.raw('SELECT * FROM aliases_url WHERE "%s" LIKE CONCAT(location, "%%") ORDER BY LENGTH(location) DESC LIMIT 1', [request.path_info])
 
                 try:
                     alias = alias[0]
