@@ -35,7 +35,7 @@ class AliasFallbackMiddleware(object):
                 try:
                     alias = alias[0]
                 except IndexError:
-                    alias = None
+                    return response
 
             if alias is not None:
                 if alias.get_related_url():
